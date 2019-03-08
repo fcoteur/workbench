@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const withAuth = require('./middleware');
+const auth = require('./auth');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 /* Check token */
-router.get('/checktoken', withAuth, function(req, res) {
+router.get('/checktoken', auth, function(req, res) {
   res.sendStatus(200);
 });
 
