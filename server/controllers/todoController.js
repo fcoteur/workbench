@@ -3,9 +3,9 @@ const { sanitizeBody } = require('express-validator/filter')
 
 var Todo = require('../models/todo');
 
-// Display list of all Bookmarks
 exports.todo_list = function(req, res) {
-  Todo.find({})
+  console.log(req.params.email)
+  Todo.find({}) //createdBy: res.params.email
   .sort('-created')
   .exec(function (err, list) {
     if (err) { return next(err); }
@@ -13,17 +13,18 @@ exports.todo_list = function(req, res) {
   });
 };
 
-// Create new Bookmark
 exports.todo_create = [
   body('title', 'Title required').isLength({ min: 1 }).trim(),
+  body('createdBy', 'createdBy required').isLength({ min: 1 }).trim(),
   sanitizeBody('title').trim().escape(),
   function(req, res, next) {
     const errors = validationResult(req);
-    
+    console.log('body',req.body)
     var todo = new Todo({ 
       title: req.body.title,
+      createdBy: req.body.createdBy
     });
-       
+    console.log(todo)
     if (!errors.isEmpty()) {
       console.log(errors.array());
     return;
@@ -31,14 +32,12 @@ exports.todo_create = [
     else {
       todo.save(function (err) {
         if (err) { return next(err); }
-        console.log('todo: ' + todo.title + ' saved')
         res.send({id: todo._id, msg: 'created'})
       });
     }
   }
 ];
 
-// Delete Bookmark
 exports.todo_delete = function(req, res) {
   Todo.deleteOne({ _id: req.body._id})
   .exec(function (err ) {
@@ -47,7 +46,6 @@ exports.todo_delete = function(req, res) {
   });
 };
 
-// Edit Bookmark
 exports.todo_update = [
   body('title', 'Title required').isLength({ min: 1 }).trim(),
   sanitizeBody('title').trim().escape(),

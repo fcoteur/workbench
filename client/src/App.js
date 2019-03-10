@@ -7,7 +7,6 @@ import Notfound from './Notfound'
 import Workbench from './workbench/Workbench';
 import Earlyapps from './earlyapps/Earlyapps';
 import RogueDungen from './roguedungeon/RogueDungeon'
-import Login from './login/Login'
 
 const Body = styled.div`
   display: flex;
@@ -27,10 +26,7 @@ const Tile = styled.li`
   margin: 5px;
   padding: 5px;
 `
-const TileLast = styled.li`
-  margin: 5px;
-  padding: 5px;
-`
+
 const styleNavLink = {color: "#f2f2f2"}
 const styleActiveNavLink = {color: "#ff9933"}
 
@@ -61,11 +57,6 @@ class App extends Component {
                   RogueDungen
                 </NavLink>
               </Tile>
-              <TileLast>
-                <NavLink style={styleNavLink} activeStyle={styleActiveNavLink} to="/login">
-                  Login
-                </NavLink>
-              </TileLast>
             </Menu>
           </NavBar>
           <hr />
@@ -73,8 +64,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route path="/workbench" component={Workbench} />
             <Route path="/earlyapps" component={Earlyapps} />
-            <Route path="/roguedungeon" component={RogueDungen} />
-            <Route path="/login" component={Login} />
+            <Route path="/roguedungeon" component={RogueDungen} /> 
             <Route component={Notfound} />
           </Switch>
         </Body>

@@ -14,9 +14,8 @@ exports.user_details = function(req, res) {
 };
 
 exports.user_register = function(req, res) {
-  const { email, password } = req.body;
-  console.log( email, password )
-  const user = new User({ email, password });
+  const { email, password, name } = req.body;
+  const user = new User({ email, password, name });
   user.save(function(err) {
     if (err) {
       res.status(500)
@@ -57,7 +56,7 @@ exports.user_authenticate = function(req, res) {
           // Issue token
           const payload = { email };
           jwt.sign(payload, process.env.SECRET,{expiresIn: '1h'}, (err, token) => {
-            res.json({token});
+            res.json({token, userId: user._id});
           })
         }
       });

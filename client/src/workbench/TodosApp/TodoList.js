@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
+import PropTypes from 'prop-types'
 import uuid from 'uuid'
 import axios from 'axios'
 
@@ -11,6 +12,11 @@ const Box = styled.div`
 `;
 
 export default class TodoList extends Component {
+  static propTypes = {
+    status: PropTypes.object.isRequired
+  }
+
+
   constructor(props){
     super(props);
     this.state = {
@@ -22,7 +28,7 @@ export default class TodoList extends Component {
 
   componentDidMount() {
     axios
-      .get(process.env.REACT_APP_SERVER + 'todos')
+      .get(process.env.REACT_APP_SERVER + 'todos/' + this.props.status.userId)
       .then(res =>{
         const newState = {...this.state, todos: res.data}
         this.setState(newState)
@@ -66,15 +72,18 @@ export default class TodoList extends Component {
 
   handleAddToDo(data) {
     let newTodos = this.state.todos.slice()
+    console.log(this.props.status.userId)
     newTodos.push({
       _id: uuid.v4(),
       title: data.title,
-      done: false
+      done: false,
+      createdBy: this.props.status.userId
     })
     this.setState({todos: newTodos}, () => {
       axios
         .post(process.env.REACT_APP_SERVER + 'todos/create/', {
           title: data.title,
+          createdBy: this.props.status.userId
         })
         .then(function (response) {
           console.log(response);

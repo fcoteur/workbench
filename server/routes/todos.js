@@ -6,7 +6,7 @@ var todo_controller = require('../controllers/todoController');
 
 
 /* GET todo list */
-router.get('/', todo_controller.todo_list);
+router.get('/:email', todo_controller.todo_list);
 
 /* POST new todo */
 router.post('/create', todo_controller.todo_create);

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
+import PropTypes from 'prop-types'
+
 import TodoList from './TodoList'
 
 const Box = styled.div`
@@ -11,11 +13,16 @@ const Box = styled.div`
 `;
 
 export default class TodoApp extends Component {
+
+  static propTypes = {
+    status: PropTypes.object.isRequired
+  }
+
   render() {
     return (
       <Box>
         <span><strong>To Do List</strong></span>
-        <TodoList />
+        <TodoList status={this.props.status} />
       </Box>
     )
   }

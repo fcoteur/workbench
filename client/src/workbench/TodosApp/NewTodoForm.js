@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
+import PropTypes from 'prop-types'
 
 const Box = styled.div`
   margin: 3px 0px;
 `;
 
 export default class NewTodoForm extends Component {
+
+  static propTypes = {
+    handleAddToDo: PropTypes.func.isRequired
+  }
+  
   constructor(props) {
     super(props);
     this.state = {

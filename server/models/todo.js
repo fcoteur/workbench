@@ -6,7 +6,8 @@ var TodoSchema = new Schema(
   {
     title: {type: String, required: true},
     done: {type: Boolean, required: true, default: false},
-    created: { type: Date, default: Date.now }
+    created: { type: Date, default: Date.now },
+    createdBy: { type: String, required: true}
   }
 );
 
