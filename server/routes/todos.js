@@ -1,4 +1,6 @@
 var express = require('express');
+const auth = require('./auth');
+
 var router = express.Router();
 
 
@@ -6,15 +8,15 @@ var todo_controller = require('../controllers/todoController');
 
 
 /* GET todo list */
-router.get('/:email', todo_controller.todo_list);
+router.get('/:userId',auth, todo_controller.todo_list);
 
 /* POST new todo */
-router.post('/create', todo_controller.todo_create);
+router.post('/create',auth, todo_controller.todo_create);
 
 /* DELETE todo */
-router.post('/delete', todo_controller.todo_delete);
+router.post('/delete',auth, todo_controller.todo_delete);
 
 /* EDIT todo */
-router.post('/update', todo_controller.todo_update);
+router.post('/update',auth, todo_controller.todo_update);
 
 module.exports = router;

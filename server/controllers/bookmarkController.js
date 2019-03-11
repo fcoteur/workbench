@@ -5,7 +5,8 @@ var Bookmark = require('../models/bookmark');
 
 // Display list of all Bookmarks
 exports.bookmark_list = function(req, res) {
-  Bookmark.find({})
+  const userId = req.params.userId;
+  Bookmark.find({createdBy: userId})
   .sort('-created')
   .exec(function (err, list) {
     if (err) { return next(err); }
@@ -16,6 +17,7 @@ exports.bookmark_list = function(req, res) {
 // Create new Bookmark
 exports.bookmark_create = [
   body('title', 'Title required').isLength({ min: 1 }).trim(),
+  body('createdBy', 'createdBy required').isLength({ min: 1 }).trim(),
   body('url', 'Url required').isLength({ min: 1 }).trim(),
   sanitizeBody('title').trim().escape(),
   function(req, res, next) {
@@ -23,7 +25,8 @@ exports.bookmark_create = [
     
     var bookmark = new Bookmark({ 
       title: req.body.title,
-      url: req.body.url
+      url: req.body.url,
+      createdBy: req.body.createdBy
     });
        
     if (!errors.isEmpty()) {
@@ -33,7 +36,6 @@ exports.bookmark_create = [
     else {
       bookmark.save(function (err) {
         if (err) { return next(err); }
-        console.log('bookmark: ' + bookmark.title + ' saved')
         res.send({id: bookmark._id, msg: 'created'})
       });
     }

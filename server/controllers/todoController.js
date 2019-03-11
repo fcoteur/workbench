@@ -4,8 +4,8 @@ const { sanitizeBody } = require('express-validator/filter')
 var Todo = require('../models/todo');
 
 exports.todo_list = function(req, res) {
-  console.log(req.params.email)
-  Todo.find({}) //createdBy: res.params.email
+  const userId = req.params.userId;
+  Todo.find({createdBy: userId})
   .sort('-created')
   .exec(function (err, list) {
     if (err) { return next(err); }
@@ -19,7 +19,6 @@ exports.todo_create = [
   sanitizeBody('title').trim().escape(),
   function(req, res, next) {
     const errors = validationResult(req);
-    console.log('body',req.body)
     var todo = new Todo({ 
       title: req.body.title,
       createdBy: req.body.createdBy

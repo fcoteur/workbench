@@ -56,7 +56,7 @@ exports.user_authenticate = function(req, res) {
           // Issue token
           const payload = { email };
           jwt.sign(payload, process.env.SECRET,{expiresIn: '1h'}, (err, token) => {
-            res.json({token, userId: user._id});
+            res.json({token, userId: user._id, userName: user.name});
           })
         }
       });
