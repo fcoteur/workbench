@@ -9,6 +9,7 @@ import UserApp from './UserApp/UserApp'
 
 const Box = styled.div`
   display: flex;
+  flex-wrap: wrap;
 `
 
 class Workbench extends Component {
@@ -18,17 +19,18 @@ class Workbench extends Component {
     this.state = {
       logged: false,
       userId: '',
+      userName: '',
       token: ''
     };
   }
 
-  handleLogin = (token, userId, logged) => {
+  handleLogin = (token, userId, userName, logged) => {
     if (token) {
       this.setState({token, userId}, () => {
         const AuthStr = 'bearer ' + token
         axios.get(process.env.REACT_APP_SERVER + 'checktoken',{ headers: { Authorization: AuthStr }})
           .then(res => {
-            this.setState({token, logged, userId})
+            this.setState({token, logged, userId, userName})
           })
           .catch(error => {
             if (error.status === 401) {
@@ -39,17 +41,17 @@ class Workbench extends Component {
           })
       })
     } else {
-      this.setState({token: '', userId: '', logged: false})
+      this.setState({token: '', userId: '', userName:'', logged: false})
     }
   }
   
   render() {
-  const returnIfLogged = this.state.logged ? [<BookmarksApp />,<TodosApp status={this.state} />,<WeatherApp />] : null
+  const returnIfLogged = this.state.logged ? [<BookmarksApp key='1' status={this.state}/>,<TodosApp key='2' status={this.state} />,<WeatherApp key='3'/>] : null
 
     return (
       <Box>
         {returnIfLogged}
-        <UserApp login={this.handleLogin} status={this.state}/>
+        <UserApp key='4' login={this.handleLogin} status={this.state}/>
       </Box>
     );
   }

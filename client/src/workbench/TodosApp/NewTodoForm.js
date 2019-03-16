@@ -18,24 +18,21 @@ export default class NewTodoForm extends Component {
         title: '',
         visible: false
     } 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.toggleVisible =this.toggleVisible.bind(this);
   }
 
-  handleChange(e) {
+  handleChange = (e) => {
     this.setState({
         [e.target.name]: e.target.value 
     })
   }
 
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.handleAddToDo(this.state)
     this.setState({title: ''})
   }
 
-  toggleVisible() {
+  toggleVisible = () =>  {
     this.setState({title: '',visible: !this.state.visible})
   }
 
@@ -43,11 +40,11 @@ export default class NewTodoForm extends Component {
     return (
       <Box>
         <div style={{display: this.state.visible === true ? "none" : "inline"}}>
-          <span onClick={this.toggleVisible}>New To-Do ></span>
+          <u onClick={this.toggleVisible}  style={{cursor: "pointer"}}>New</u>
         </div>
         <div style={{display: this.state.visible === false ? "none" : "inline"}} >
           <form onSubmit={this.handleSubmit} style={{display: 'inline'}}>
-              <input placeholder='enter todo...' autoComplete="off" size="40" value={this.state.title} name='title' onChange={this.handleChange} />
+              <input placeholder='enter todo...' autoComplete="off" value={this.state.title} name='title' onChange={this.handleChange} />
               <input type='submit' value={String.fromCharCode(0x21B5)} />
           </form>
           <button onClick={this.toggleVisible} style={{display: 'inline'}}>{String.fromCharCode(0x2A2F)}</button>

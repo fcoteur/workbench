@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components';
+import PropTypes from 'prop-types'
 import uuid from 'uuid'
 import axios from 'axios'
 
@@ -11,6 +12,10 @@ const Box = styled.div`
 `;
 
 export default class BookmarkList extends Component {
+  static propTypes = {
+    status: PropTypes.object.isRequired
+  }
+
   constructor(props){
     super(props);
     this.state = {
@@ -21,8 +26,9 @@ export default class BookmarkList extends Component {
   }
 
   componentDidMount() {
+    const AuthStr = 'bearer ' + this.props.status.token
     axios
-      .get(process.env.REACT_APP_SERVER + 'bookmarks')
+      .get(process.env.REACT_APP_SERVER + 'bookmarks/'  + this.props.status.userId, { headers: { Authorization: AuthStr }})
       .then(res =>{
         const newState = {...this.state, data: res.data}
         this.setState(newState)
@@ -31,11 +37,12 @@ export default class BookmarkList extends Component {
 
   handeDelete(e) {
     const { data } = this.state;
+    const AuthStr = 'bearer ' + this.props.status.token
     this.setState({data: data.slice(0, e).concat(data.slice(e+1))},() => {
       axios
         .post(process.env.REACT_APP_SERVER + 'bookmarks/delete/', {
           id: data[e]._id
-        })
+        }, {headers: { Authorization: AuthStr }})
         .then(function (response) {
           console.log(response);
         })
@@ -51,13 +58,16 @@ export default class BookmarkList extends Component {
       _id: uuid.v4(),
       title: data.title,
       url: data.url,
+      createdBy: this.props.status.userId
     })
     this.setState({data: newData},() => {
+      const AuthStr = 'bearer ' + this.props.status.token
       axios
         .post(process.env.REACT_APP_SERVER + 'bookmarks/create/', {
           title: data.title,
           url: data.url,
-        })
+          createdBy: this.props.status.userId
+        }, {headers: { Authorization: AuthStr }})
         .then(function (response) {
           console.log(response);
         })
@@ -73,12 +83,13 @@ export default class BookmarkList extends Component {
     newData[index].title = data.title;
     newData[index].url = data.url;
     this.setState({data: newData}, () => {
+      const AuthStr = 'bearer ' + this.props.status.token
       axios
         .post(process.env.REACT_APP_SERVER + 'bookmarks/update/', {
           id: newData[index]._id,
           title: data.title,
-          url: data.url,
-        })
+          url: data.url
+        }, {headers: { Authorization: AuthStr }})
         .then(function (response) {
           console.log(response);
         })
@@ -102,8 +113,8 @@ export default class BookmarkList extends Component {
 
     return (
       <Box>
-        <NewBookmarkForm handleAdd={this.handleAdd}/>
         {list}
+        <NewBookmarkForm handleAdd={this.handleAdd}/>
       </Box>
     );
   }

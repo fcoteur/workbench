@@ -14,24 +14,21 @@ export default class NewBookmarkForm extends Component {
         url:'',
         visible:false
     } 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.toggleVisible =this.toggleVisible.bind(this)
   }
 
-  handleChange(e) {
+  handleChange = (e) => {
     this.setState({
         [e.target.name]: e.target.value 
     })
   }
 
-  handleSubmit(e) {
+  handleSubmit = (e) =>  {
     e.preventDefault();
     this.props.handleAdd(this.state)
     this.setState({title: '', url: '', visible: false})
   }
 
-  toggleVisible() {
+  toggleVisible = () => {
     this.setState({visible: !this.state.visible})
   }
 
@@ -39,7 +36,7 @@ export default class NewBookmarkForm extends Component {
     return (
       <Box>
         <div style={{display: this.state.visible === true ? "none" : "inline"}}>
-          <span onClick={this.toggleVisible}>New Bookmark ></span>
+          <u onClick={this.toggleVisible} style={{cursor: "pointer"}}>New</u>
         </div>
         <div style={{display: this.state.visible === false ? "none" : "inline"}} >
           <form onSubmit={this.handleSubmit} style={{display: 'inline'}}>

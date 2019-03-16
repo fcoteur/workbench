@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 export default function Logout(props) {
   
   const logout = () => {
-    props.login('','',false)
+    props.login('','','',false)
   }
 
   return(

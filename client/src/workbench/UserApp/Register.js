@@ -39,39 +39,39 @@ export default class Register extends Component {
       <form onSubmit={this.onSubmit}>
         <fieldset>
           <legend>Register</legend>
-          <label for="name">name </label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter your name"
-            size="15"
-            value={this.state.name}
-            onChange={this.handleInputChange}
-            required
-          />
-          <br />
-          <label for="email">email </label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            size="15"
-            value={this.state.email}
-            onChange={this.handleInputChange}
-            required
-          />
-          <br />
-          <label for="password">password </label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter password"
-            size="15"
-            value={this.state.password}
-            onChange={this.handleInputChange}
-            required
-          />
-          <br />
+          <p>
+            <label htmlFor="name">name </label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              value={this.state.name}
+              onChange={this.handleInputChange}
+              required
+            />
+          </p>
+          <p>
+            <label htmlFor="email">email </label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter email"
+              value={this.state.email}
+              onChange={this.handleInputChange}
+              required
+            />
+          </p>
+          <p>
+            <label htmlFor="password">password </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              value={this.state.password}
+              onChange={this.handleInputChange}
+              required
+            />
+          </p>
           <input type="submit" value="Submit"/>
         </fieldset>
       </form>

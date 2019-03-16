@@ -12,9 +12,9 @@ const Box = styled.div`
   align-items: center;
   margin: 5px 5px;
   padding: 5px 5px;
-  width: 400px;
+  width: 200px;
   text-align: left;
-  border: 1pt solid black;
+  
 `;
 
 
@@ -25,15 +25,31 @@ export default class UserApp extends Component {
     status: PropTypes.object,
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      exstingUser: true
+    }
+  }
+
   render() {
-    const logged = this.props.status.logged ? "Logged!" : null
-    const logout = this.props.status.logged ? <Logout login={this.props.login}/> : null
+    const formLogin = (
+      <div>
+        <Login login={this.props.login}/>
+        <p>Not yet registered? click <u onClick={() => this.setState({exstingUser: false})}>here</u></p>
+      </div>
+    )
+    const formRegister = (
+      <div>
+        <Register />
+        <p>Already registered? click <u onClick={() => this.setState({exstingUser: true})}>here</u></p>
+      </div>
+    )
+    const notLogged = this.state.exstingUser ? formLogin : formRegister
+    const form = this.props.status.logged ? <div><p><strong>{this.props.status.userName} Logged!</strong></p><Logout login={this.props.login}/></div> : notLogged
     return (
       <Box>
-        <p><strong>{logged}</strong></p>
-        {logout}
-        <Login login={this.props.login}/>
-        <Register />
+        {form} 
       </Box>
     )
   }

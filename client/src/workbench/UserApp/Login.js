@@ -33,7 +33,7 @@ export default class Login extends Component {
     .then(res => {
       res.json().then((val) => {
         if (val.token) {
-          this.props.login(val.token, val.userId, true)
+          this.props.login(val.token, val.userId, val.userName, true)
         }
       })
        
@@ -49,28 +49,27 @@ export default class Login extends Component {
         <form onSubmit={this.onSubmit}>
           <fieldset>
             <legend>Login</legend>
-            <label for="email">email </label>
+            <p><label htmlFor="email">email </label>
             <input
               type="email"
               name="email"
               placeholder="Enter email"
-              size="15"
               value={this.state.email}
               onChange={this.handleInputChange}
               required
             />
-            <br />
-            <label for="password">password </label>
+            </p>
+            <p>
+            <label htmlFor="password">password </label>
             <input
               type="password"
               name="password"
               placeholder="Enter password"
-              size="15"
               value={this.state.password}
               onChange={this.handleInputChange}
               required
             />
-            <br />
+            </p>
             <input type="submit" value="Submit"/>
           </fieldset>
         </form>

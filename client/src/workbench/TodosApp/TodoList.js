@@ -27,8 +27,9 @@ export default class TodoList extends Component {
   }
 
   componentDidMount() {
+    const AuthStr = 'bearer ' + this.props.status.token
     axios
-      .get(process.env.REACT_APP_SERVER + 'todos/' + this.props.status.userId)
+      .get(process.env.REACT_APP_SERVER + 'todos/' + this.props.status.userId, { headers: { Authorization: AuthStr }})
       .then(res =>{
         const newState = {...this.state, todos: res.data}
         this.setState(newState)
@@ -36,12 +37,13 @@ export default class TodoList extends Component {
   }
 
   handeDelete(e) {
+    const AuthStr = 'bearer ' + this.props.status.token
     const { todos } = this.state;
     this.setState({todos: todos.slice(0, e).concat(todos.slice(e+1))}, () => {
       axios
         .post(process.env.REACT_APP_SERVER + 'todos/delete/', {
           _id: todos[e]._id
-        })
+        },{ headers: { Authorization: AuthStr }})
         .then(function (response) {
           console.log(response);
         })
@@ -52,6 +54,7 @@ export default class TodoList extends Component {
   }
 
   handleToggle(idx) {
+    const AuthStr = 'bearer ' + this.props.status.token
     let newTodos = this.state.todos.slice()
     newTodos[idx].done = !newTodos[idx].done;
     this.setState({todos: newTodos}, () => {
@@ -60,7 +63,7 @@ export default class TodoList extends Component {
           id: newTodos[idx]._id,
           title: newTodos[idx].title,
           done: newTodos[idx].done          
-        })
+        },{ headers: { Authorization: AuthStr }})
         .then(function (response) {
           console.log(response);
         })
@@ -71,8 +74,8 @@ export default class TodoList extends Component {
   }
 
   handleAddToDo(data) {
+    const AuthStr = 'bearer ' + this.props.status.token
     let newTodos = this.state.todos.slice()
-    console.log(this.props.status.userId)
     newTodos.push({
       _id: uuid.v4(),
       title: data.title,
@@ -84,7 +87,7 @@ export default class TodoList extends Component {
         .post(process.env.REACT_APP_SERVER + 'todos/create/', {
           title: data.title,
           createdBy: this.props.status.userId
-        })
+        },{ headers: { Authorization: AuthStr }})
         .then(function (response) {
           console.log(response);
         })
@@ -95,6 +98,7 @@ export default class TodoList extends Component {
   }
 
   handleEditToDo(data) {
+    const AuthStr = 'bearer ' + this.props.status.token
     let newTodos = this.state.todos.slice()
     const index = newTodos.findIndex(x => x._id === data._id);
     newTodos[index].title = data.title;
@@ -104,7 +108,7 @@ export default class TodoList extends Component {
           id: newTodos[index]._id,
           title: data.title,
           done: data.done          
-        })
+        },{ headers: { Authorization: AuthStr }})
         .then(function (response) {
           console.log(response);
         })
@@ -129,8 +133,8 @@ export default class TodoList extends Component {
 
     return (
       <Box>
-        <NewTodoForm handleAddToDo={this.handleAddToDo}/>
         {list}
+        <NewTodoForm handleAddToDo={this.handleAddToDo}/>
       </Box>
     );
   }
