@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import styled from 'styled-components';
 
 import Login from './Login'
-import Logout from './Logout'
 import Register from './Register'
 
 const Box = styled.div`
@@ -13,16 +13,14 @@ const Box = styled.div`
   margin: 5px 5px;
   padding: 5px 5px;
   width: 200px;
-  text-align: left;
-  
+  text-align: left;  
 `;
-
 
 export default class UserApp extends Component {
 
   static propTypes = {
     login: PropTypes.func.isRequired,
-    status: PropTypes.object,
+    status: PropTypes.object
   }
 
   constructor(props) {
@@ -46,10 +44,12 @@ export default class UserApp extends Component {
       </div>
     )
     const notLogged = this.state.exstingUser ? formLogin : formRegister
-    const form = this.props.status.logged ? <div><p><strong>{this.props.status.userName} Logged!</strong></p><Logout login={this.props.login}/></div> : notLogged
+
+    const logged = (this.props.status.logged) ? <Redirect to="/protected" /> : notLogged
+
     return (
       <Box>
-        {form} 
+        {logged} 
       </Box>
     )
   }

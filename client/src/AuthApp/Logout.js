@@ -8,9 +8,7 @@ export default function Logout(props) {
   }
 
   return(
-      <div>
         <button onClick={logout}>logout</button>
-      </div>
     )
 }
 

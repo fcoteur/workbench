@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
-import {Route,NavLink, BrowserRouter as Router, Switch} from 'react-router-dom';
+import {
+  Route,
+  NavLink, 
+  BrowserRouter as Router, 
+  Switch,
+  Redirect,
+  withRouter} from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios'
 
 import Home from './Home';
-import Notfound from './Notfound'
 import Workbench from './workbench/Workbench';
 import Earlyapps from './earlyapps/Earlyapps';
-import RogueDungen from './roguedungeon/RogueDungeon'
+import RogueDungen from './roguedungeon/RogueDungeon';
+import UserApp from './AuthApp/UserApp'
+import Logout from './AuthApp/Logout'
 
 const Body = styled.div`
   display: flex;
@@ -23,15 +31,81 @@ const Menu = styled.ul`
   list-style: none;
 `
 const Tile = styled.li`
+  display: flex;
   margin: 5px;
   padding: 5px;
+  border: 1pt solid black
 `
 
-const styleNavLink = {color: "#f2f2f2"}
+const styleNavLink = {color: "#f2f2f2", display: "flex", alignItems: "center" }
 const styleActiveNavLink = {color: "#ff9933"}
 
 class App extends Component {
+  
+  constructor(props) {
+    super(props)
+    this.state = {
+      logged: false,
+      userId: '',
+      userName: '',
+      token: ''
+    };
+  }
+
+  handleLogin = (token, userId, userName, logged) => {
+    if (token) {
+      this.setState({token, userId}, () => {
+        const AuthStr = 'bearer ' + token
+        axios.get(process.env.REACT_APP_SERVER + 'checktoken',{ headers: { Authorization: AuthStr }})
+          .then(res => {
+            this.setState({token, logged, userId, userName})
+          })
+          .catch(error => {
+            if (error.status === 401) {
+              this.setState({logged: false})
+              return
+            } 
+            return error;    
+          })
+      })
+    } else {
+      this.setState({token: '', userId: '', userName:'', logged: false})
+    }
+  }
+
   render() {
+    const AuthButton = withRouter(
+      ({ history }) =>
+        this.state.logged ? (
+          <span style={{color: "#cc0000"}}>
+            {this.state.userName + " "}
+            <Logout login={this.handleLogin}/>
+          </span>
+        ) : (
+          <p style={{color: "white"}}>You are not logged in.</p>
+        )
+    );
+
+    const PrivateRoute = ({ component: Component, ...rest }) => {
+      return (
+        <Route
+          {...rest}
+          render={props =>
+            this.state.logged ? (
+              <Component {...props}  status={this.state}/>
+            ) : (
+              <Redirect
+                to={{
+                  pathname: "/login",
+                  state: { from: props.location }
+                }}
+              />
+            )
+          }
+        />
+      );
+    }
+
     return (
       <Router>
         <Body>
@@ -43,8 +117,8 @@ class App extends Component {
                 </NavLink>
               </Tile>
               <Tile>
-                <NavLink style={styleNavLink} activeStyle={styleActiveNavLink} to="/workbench">
-                  Workbench
+                <NavLink style={styleNavLink} activeStyle={styleActiveNavLink} to="/protected">
+                  Workbench (protected)
                 </NavLink>
               </Tile>
               <Tile>
@@ -57,15 +131,18 @@ class App extends Component {
                   RogueDungen
                 </NavLink>
               </Tile>
+              <Tile>
+                <AuthButton />
+              </Tile>
             </Menu>
           </NavBar>
           <hr />
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/workbench" component={Workbench} />
+            <PrivateRoute path="/protected" component={Workbench} />
             <Route path="/earlyapps" component={Earlyapps} />
             <Route path="/roguedungeon" component={RogueDungen} /> 
-            <Route component={Notfound} />
+            <Route path="/login" render={(props) => <UserApp {...props} login={this.handleLogin} status={this.state}/>} /> 
           </Switch>
         </Body>
       </Router>

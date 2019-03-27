@@ -21,7 +21,7 @@ export default class TodoApp extends Component {
   render() {
     return (
       <Box>
-        <span><strong>To Do List</strong></span><br /> 
+        <span><strong>To Do List</strong></span>
         <TodoList status={this.props.status} />
       </Box>
     )
